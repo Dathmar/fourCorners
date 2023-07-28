@@ -1,0 +1,18 @@
+{% load static %}
+    <section id="footer" class="limestone-bg py-4">
+        <div class="row">
+            <img class="mx-auto fade-in" style="width: 350px; height: auto;" src="{% static 'img/footer_logo.png' %}">
+        </div>
+        <div class="row text-center py-4">
+            <span class="fade-in">
+                <a href="{% url 'store:our-story' %}">Our Story</a> |
+                <a href="{% url 'store:your-services' %}">Your Services</a> |
+                <a href="{% url 'quotes:create-quote' %}">Get Quote</a> |
+                <a href="something">Login</a> |
+                <a href="something">Privacy Policy</a>
+            </span>
+        </div>
+        <div class="row text-center">
+            <span class="fw-bold fade-in" style="font-size: small">All Rights Reserved Four Corners Sourcing {% now 'Y' %} </span>
+        </div>
+    </section>

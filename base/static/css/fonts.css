@@ -1,0 +1,92 @@
+@font-face {
+	font-family: "Gotham Book";
+	src: url("../fonts/Gotham Book Regular.otf") format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gotham Medium";
+	src: url("../fonts/Gotham Medium.otf") format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Canela Medium";
+	src: url("../fonts/Canela-Medium.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Powell Antique';
+	src: url(../fonts/PowellAntique.woff) format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Cinzel-Regular';
+	src: url(../fonts/Cinzel-Regular.ttf) format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Sackers';
+	src: url(../fonts/SACKERS/SackersGothicStd-Medium.otf) format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Sackers';
+	src: url(../fonts/SACKERS/SackersGothicStd-Light.otf) format('opentype');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Sackers';
+	src: url(../fonts/SACKERS/SackersGothicStd-Heavy.otf) format('opentype');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Maldins';
+	src: url(../fonts/maldins/MaldinsFREE.otf) format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'La Luxes Script';
+	src: url(../fonts/LALUXESDUO/Webfont/LaLuxesScript.woff2) format('woff2');
+	src: url(../fonts/LALUXESDUO/Webfont/LaLuxesScript.woff) format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'La Luxes Serif';
+	src: url(../fonts/LALUXESDUO/Webfont/LaLuxesSerif.woff2) format('woff2');
+	src: url(../fonts/LALUXESDUO/Webfont/LaLuxesSerif.woff) format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Colus_Regular';
+	src: url(../fonts/Colus-Regular.otf) format('otf');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Montserrat';
+	src: url(../fonts/Montserrat-VariableFont_wght.ttf) format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}

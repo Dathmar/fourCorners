@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Create Quote{% endblock %}
+{% block start_styles %}
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-pills nav-fill mb-3 justify-content-around" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="rounded-0 pine-list-item nav-link active" id="pills-asset-tab" data-bs-toggle="pill" data-bs-target="#pills-asset" type="button" role="tab" aria-controls="pills-asset" aria-selected="true">1 Assets</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="rounded-0 pine-list-item nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">2 Contact Information</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="rounded-0 pine-list-item nav-link" id="pills-options-tab" data-bs-toggle="pill" data-bs-target="#pills-options" type="button" role="tab" aria-controls="pills-options" aria-selected="false">3 Delivery Options</button>
+        </li>
+    </ul>
+    <form method="post">
+        {% csrf_token %}
+        <div class="tab-content" id="pills-tab-content">
+            <div class="tab-pane fade show active" id="pills-asset" role="tabpanel" aria-labelledby="pills-asset-tab" tabindex="0">
+                <div class="container pb-5">
+                    <div class="row quote-row rounded-2 my-2">
+                        {% include 'quotes/form/from-address-form.html' %}
+                    </div>
+                    <div class="row quote-row rounded-2 my-2">
+                        {% include 'quotes/form/to-address-form.html' %}
+                    </div>
+                    <div id="form-set">
+                        {{ item_forms.management_form }}
+                        {% for item_form in item_forms %}
+                            {% include 'quotes/form/item-form.html' %}
+                        {% endfor %}
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn add-w spruce-button" title="New Asset" id="addItem">New Asset</button>
+                        <button type="button" class="btn clone-w spruce-button" title="Clone Asset" id="cloneItem">Clone Asset</button>
+                        <button type="button" class="btn spruce-button" id="goToContact">Continue</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+                <div class="container">
+                    <div class="row text-center">
+                        <div>
+                            {% include 'quotes/form/contact-form.html' %}
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div>
+                            <button type="button" class="btn spruce-button" id="goToOptions">Continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-options" role="tabpanel" aria-labelledby="pills-options-tab" tabindex="0">
+                <div class="container">
+                    <div class="row text-center">
+                        <div>
+                            {% include 'quotes/form/options-form.html' %}
+                        </div>
+                    </div>
+                    <div class="row text-center pb-4">
+                        <div>
+                            <input type="submit" class="btn spruce-button" id="submit-quote" value="Submit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="d-none empty-form" id="empty-form">
+        {{ empty_form|safe }}
+    </div>
+{% endblock %}
+
+{% block end_body %}
+    <script src="{% static 'js/new_quotes.js' %}"></script>
+{% endblock %}

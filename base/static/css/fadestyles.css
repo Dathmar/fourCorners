@@ -1,0 +1,112 @@
+@-webkit-keyframes fadeInLeft {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(-40px);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@-webkit-keyframes fadeInRight {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(40px);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@-webkit-keyframes fadeInTop {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(-40px);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+    }
+}
+
+@keyframes fadeInTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@-webkit-keyframes fadeInBottom {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+    }
+}
+
+@keyframes fadeInBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.fade-in {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-out, transform 2s ease-out;
+    will-change: opacity, visibility;
+}
+
+.fade-in.is-visible {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+}
+
+.fade-from-left {opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-out, transform 2s ease-out;
+    will-change: opacity, visibility;
+}
+
+.fade-from-left.is-visible {
+    -webkit-animation-name: fadeInLeft;
+    animation-name: fadeInLeft;
+}

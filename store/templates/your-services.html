@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %}Your Services{% endblock %}
+{% block content %}
+    <section id="your-services" class="limestone-bg">
+        <div class="container py-4">
+            <h1 class="fade-in text-center">Your Services</h1>
+            <p class="fade-in mist-font text-center">All Your Logistics, One Secure Portal</p>
+            <p class="fade-in text-center">Four Corners Integrated Logistics handles every step of your logistics needs, turnkey.</p>
+        </div>
+    </section>
+    <section id="service-grid">
+        <div class="container align-items-center py-4">
+            <div class="row">
+                <h1 class="text-center fade-in">All Your Logistics, One Secure Portal</h1>
+                <p class="text-center fade-in mist-font">
+                    Our expert furniture logistics team will manage every step for you, turnkey.
+                </p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
+                <div class="card pine-bg limestone-font py-5 px-3 m-3 fade-in h-100" style="width: 20em">
+                    <div class="card-title text-center">Import Globally</div>
+                    <div class="card-text text-center">Source products from all corners of the global and have them delivered directly to you</div>
+                    <div class="card-link text-center pt-4"><a class="btn pine-limestone-button" href="somthing">Request a Demo</a></div>
+                </div>
+                <div class="card pine-bg limestone-font py-5 px-3 m-3 fade-in h-100" style="width: 20em">
+                    <div class="card-title text-center">Replenish Inventory</div>
+                    <div class="card-text text-center">Order fresh new assets from your existing manufacturers and set them for easy repeat</div>
+                    <div class="card-link text-center pt-4"><a class="btn pine-limestone-button" href="somthing">Request a Demo</a></div>
+                </div>
+                <div class="card pine-bg limestone-font py-5 px-3 m-3 fade-in h-100" style="width: 20em">
+                    <div class="card-title text-center">White Glove Delivery</div>
+                    <div class="card-text text-center">Deliver a concierge level of service with expert in-home delivery and setup.</div>
+                    <div class="card-link text-center pt-4"><a class="btn pine-limestone-button" href="somthing">Request a Demo</a></div>
+                </div>
+                <div class="card pine-bg limestone-font py-5 px-3 m-3 fade-in h-100" style="width: 20em">
+                    <div class="card-title text-center">In-Home Installations</div>
+                    <div class="card-text text-center">Deliver your most delicate and unique assets with expert in-home assembly services</div>
+                    <div class="card-link text-center pt-4"><a class="btn pine-limestone-button" href="somthing">Request a Demo</a></div>
+                </div>
+                <div class="card pine-bg limestone-font py-5 px-3 m-3 fade-in h-100" style="width: 20em">
+                    <div class="card-title text-center">Meticulous Packing</div>
+                    <div class="card-text text-center">Ensure your assets arrive safely and damage free by allowing us to prepare them</div>
+                    <div class="card-link text-center pt-4"><a class="btn pine-limestone-button" href="somthing">Request a Demo</a></div>
+                </div>
+                <div class="card pine-bg limestone-font py-5 px-3 m-3 fade-in h-100" style="width: 20em">
+                    <div class="card-title text-center">Designer Services</div>
+                    <div class="card-text text-center">4CL is custom tailored to provide complete designer installation services</div>
+                    <div class="card-link text-center pt-4"><a class="btn pine-limestone-button" href="somthing">Request a Demo</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="getting-started" class="limestone-bg py-5">
+        <div class="container">
+            <div class="row text-center fade-in">
+                <h1>Getting Started</h1>
+            </div>
+            <div class="row pt-4 text-center fade-in">
+                <div class="card card-body pine-font" style="border-radius: 1em;">
+                    <div class="card-title">Request a Quote</div>
+                    <div class="card-body">Simply complete the form for your first delivery and allow our team to
+                        provide you multiple logistics options with our expert recommendations
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-4 text-center fade-in">
+                <div class="card card-body pine-font" style="border-radius: 1em;">
+                    <div class="card-title">Select Your Service</div>
+                    <div class="card-body">
+                        Review the options provided and select the one that best suites your customer
+                        needs and pay securely online to schedule service
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-4 text-center fade-in">
+                <div class="card card-body pine-font" style="border-radius: 1em;">
+                    <div class="card-title">View Your Portal</div>
+                    <div class="card-body">
+                        Once you have service scheduled, we will text and/or email you and your customer each step of
+                        the way, and you can see them all in your portal
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-4 text-center fade-in">
+                <span><a class="btn spruce-button" style="width: 11em;" href="{% url 'quotes:create-quote' %}">Get Your Quote</a></span>
+
+            </div>
+        </div>
+    </section>
+    {% include 'schedule-cta.html' %}
+{% endblock %}

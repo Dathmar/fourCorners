@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %}Home{% endblock %}
+{% block content %}
+    <section id="hero-section-new">
+        <div class="row" style="height: 610px; background-image: url({% static 'img/hero.png' %});background-size: cover; background-repeat: no-repeat;">
+            <div class="offset-1 col-9 col-md-5 pb-4 ps-3 pe-3 mt-4 align-self-center">
+                <h1 class="blue-font mb-4 fade-in" style="font-size: 2.5em">Turnkey Furniture Logistics</h1>
+                <span class="mb-4 fade-in">
+                    <p class="mist-font medium-font" style="max-width: 35ch; font-size: 1.5em;">New inventory shipping to your stores, White glove delivery to your customers</p>
+                </span>
+                <div class="mt-4">
+                    <a href="{% url 'quotes:create-quote' %}" class="btn btn-primary spruce-button mt-3 fade-in" style="width: 20em;">One Click To Manage It All</a>
+                </div>
+            </div>
+            <div class="offset-lg-1 col-lg-5 d-none d-lg-block fade-in" style="); background-size: cover; background-position: center;">
+            </div>
+        </div>
+    </section>
+    <section id="quote" class="pine-bg py-5 quote-background">
+        <p class="mx-auto limestone-font fade-in text-center" style="max-width: 80%;">&rsquo;Logistics used to be a daily headache until we started working with Four Corners.  Now we focus on our
+            core business and have been able to increase sales while delivering a concierge level of service.&rsquo;</p>
+        <p class="mist-font text-center fade-in p-0 m-0">Dallas Market Center | Texas</p>
+    </section>
+    <section id="cards" class="limestone-font py-4">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
+
+                    <div class="card border-0 m-3" style="width: 16em">
+                        <div class="card-img-top fade-in">
+                            <img alt="import" src="{% static 'img/import.png' %}">
+                        </div>
+                        <div class="card-title spruce-font text-center pt-2 fade-in">
+                            Import Globally
+                        </div>
+                        <div class="card-text mist-font text-center fade-in">
+                            Source products from all corners of the globe
+                        </div>
+                    </div>
+
+
+                    <div class="card border-0 m-3" style="width: 16em">
+                        <div class="card-img-top fade-in">
+                            <img alt="replenish" src="{% static 'img/replenish.png' %}">
+                        </div>
+                        <div class="card-title spruce-font text-center pt-2 fade-in">
+                            Replenish Inventory
+                        </div>
+                        <div class="card-text mist-font text-center fade-in">
+                            Order fresh new assets from your existing manufacturers
+                        </div>
+                    </div>
+
+                    <div class="card border-0 m-3" style="width: 16em">
+                        <div class="card-img-top fade-in">
+                            <img alt="installation" src="{% static 'img/delivery.png' %}">
+                        </div>
+                        <div class="card-title spruce-font text-center pt-2 fade-in">
+                            In-Home Installation
+                        </div>
+                        <div class="card-text mist-font text-center fade-in">
+                            Deliver a premier level of service that sets you apart
+                        </div>
+                    </div>
+
+            </div>
+            <div class="row text-center pt-4">
+                <div>
+                    <a class="btn spruce-button fade-in" href="{% url 'quotes:create-quote' %}">Get My Quote</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    {% include 'schedule-cta.html' %}
+{% endblock %}

@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'La Luxes Script';
+    src: url('LaLuxesScript.woff2') format('woff2'),
+        url('LaLuxesScript.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'La Luxes Serif';
+    src: url('LaLuxesSerif.woff2') format('woff2'),
+        url('LaLuxesSerif.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+

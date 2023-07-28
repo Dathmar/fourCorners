@@ -1,0 +1,55 @@
+        <div class="row quote-item-row rounded-2 my-2">
+            <div class="row">
+                <div class="row">
+                    <div class="col-10" id="id-item-{{ forloop.counter0 }}">
+                        <h4>Asset {{ forloop.counter }}</h4>
+                    </div>
+                    <div class="col-1">
+                        <button class="btn btn-sm remove-form-row" title="Remove Item" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash float-end orange-font" viewBox="0 0 16 16" alt="delete">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                {{ item_form.non_field_errors }}
+            </div>
+            <div class="item-details row">
+                <div class="col-12 pb-2">
+                    <div class="fieldWrapper">
+                        {{ item_form.description }}
+                        {{ item_form.description.errors }}
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="fieldWrapper">
+                        {{ item_form.length }}
+                        {{ item_form.length.errors }}
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 pt-2 pt-md-0">
+                    <div class="fieldWrapper">
+                        {{ item_form.width }}
+                        {{ item_form.width.errors }}
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 pt-2 pt-md-0">
+                    <div class="fieldWrapper">
+                        {{ item_form.height }}
+                        {{ item_form.height.errors }}
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 pt-2">
+                    {{ item_form.weight }}
+                    {{ item_form.weight.errors }}
+                </div>
+                <div class="col-12 col-md-6 pt-2">
+                    <div class="fieldWrapper">
+                        {{ item_form.quantity }}
+                        {{ item_form.quantity.errors }}
+                    </div>
+                </div>
+
+            </div>
+        </div>

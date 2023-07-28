@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Your Quotes{% endblock %}
+{% block start_styles %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row pt-4">
+        <h1>Thank you so much choosing 4CL!</h1>
+    </div>
+    <div class="row pt-4">
+        We value your business!
+    </div>
+    {% if quotes %}
+    <div class="row pt-4">
+        <h2>Your quotes are</h2>
+    </div>
+    <div class="row pt-4">
+        <table class="table table-sm table-borderless">
+            <thead>
+                <td>Quote</td>
+                <td>Pickup Contact Name</td>
+                <td>Delivery Contact Name</td>
+                <td>Status</td>
+            </thead>
+            <tbody>
+                {% for quote in quotes %}
+                <tr>
+                    <td>
+                        {{ quote.encoding }}
+                    </td>
+                    <td>
+                        {{ quote.from_name }}
+                    </td>
+                    <td>
+                        {{ quote.to_name }}
+                    </td>
+                    {% if quote.status == 'created' %}
+                    <td>
+                    {% elif quote.status == 'options_notification_sent' or quote.status == 'needs_payment' or quote.status == 'send_bol_notification' %}
+                    <td style="background-color: #e3c638">
+                    {% else %}
+                    <td style="background-color: #17c270">
+                    {% endif %}
+                        {{ quote.status }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

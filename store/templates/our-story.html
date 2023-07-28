@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_title %}Our Story{% endblock %}
+{% block content %}
+    <section id="our-story">
+        <div class="container py-5 w-75">
+            <h1 class="fade-in text-center">Our Story</h1>
+            <p class="fade-in text-center">Since 1998, Four Corners has helped some of America's favorite brands and retailers
+                develop product lines
+                and build reliable supply chains.</p>
+            <p class="fade-in text-center">Today, we manage product development and supply chain operations with teams in our
+                offices in Mexico,
+                China, Vietnam, Thailand, and the US.</p>
+            <p class="fade-in text-center">To further these efforts and provide service from creation to final mile delivery, we
+                have launched Four
+                Corners Integrated Logistics.</p>
+            <p class="fade-in text-center">We are passionate about helping businesses scale through transparent and ethical global
+                business
+                practices.</p>
+        </div>
+    </section>
+    {% include 'schedule-cta.html' %}
+{% endblock %}

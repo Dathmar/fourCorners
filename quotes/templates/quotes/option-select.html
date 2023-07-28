@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Quote Created{% endblock %}
+{% block start_styles %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="pt-4 pb-4">
+        <div class="row">
+            <h1>Thank you so much choosing 4CL!</h1>
+        </div>
+        <div class="row pt-4">
+            Our expert logistics team has prepared the below quote options for you. Simply select the one that best suits your needs, and you can complete payment to automatically secure and schedule service.
+        </div>
+        <div class="row pt-4">
+            <form method="post">
+                {% csrf_token %}
+                <fieldset>
+                    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                    {% for choice in quote_options %}
+                        <input type="radio" name="choice" id="choice-{{ forloop.counter }}" value="{{ choice.id }}"{% if choice.selected_option %} checked{% endif %}>
+                        <label for="choice{{ forloop.counter }}">{{ choice.option_description }} ${{ choice.option_price }}</label><br>
+                    {% endfor %}
+                </fieldset>
+                <input type="submit" class="btn pine-button mt-2" value="Select My Option">
+            </form>
+        </div>
+        <div class="row pt-4">
+            Thank you again for choosing 4CL and we look forward to serving you!
+        </div>
+    </div>
+</div>
+{% endblock %}

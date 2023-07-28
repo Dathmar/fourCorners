@@ -1,0 +1,20 @@
+{% load static %}
+    <nav class="navbar navbar-light navbar-expand-lg navigation-clean-button">
+        <div class="container-fluid">
+            <a class="navbar-brand mx-auto" href="{% url 'store:index' %}">
+                <img src="{% static 'img/logo.png' %}" style="width: 300px;" alt="logo">
+            </a>
+            <div class="text-center d-lg-none" style="width: 100%">
+                <button data-bs-toggle="collapse" class="navbar-toggler custom-toggler" data-bs-target="#navcol-1">
+                    <span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'store:our-story' %}">Our Story</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'store:your-services' %}">Your Services</a></li>
+                    <li class="nav-item green-item"><a class="nav-link pine-button" href="{% url 'quotes:create-quote' %}">Get Quote</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
