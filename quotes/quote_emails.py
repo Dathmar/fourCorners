@@ -34,7 +34,7 @@ def send_internal_email(quote):
 
 def send_create_external_email(quote):
     message = Mail(
-        to_emails=[To(quote.to_email)],
+        to_emails=[To(quote.bill_to_email)],
         from_email='orders@4cl.com'
     )
 
@@ -44,7 +44,7 @@ def send_create_external_email(quote):
 
 def send_quote_options_external_email(quote):
     message = Mail(
-        to_emails=[To(quote.to_email)],
+        to_emails=[To(quote.bill_to_email)],
         from_email='orders@4cl.com',
     )
     options_url = quote.get_quote_options_url()
@@ -58,7 +58,7 @@ def send_quote_options_external_email(quote):
 
 def send_quote_paid_external_email(quote):
     message = Mail(
-        to_emails=[To(quote.to_email)],
+        to_emails=[To(quote.bill_to_email)],
         from_email='orders@4cl.com',
     )
 
@@ -76,7 +76,7 @@ def send_quote_paid_external_email(quote):
 def send_quote_label_external_email(quote):
     message = Mail(
         # to_emails=[To(quote.from_email), To(quote.to_email)],
-        to_emails=[To(quote.to_email), To(quote.from_email)],
+        to_emails=[To(quote.bill_to_email), To(quote.from_email)],
         from_email='orders@4cl.com'
     )
 
@@ -92,7 +92,7 @@ def send_quote_label_external_email(quote):
 
 def send_delivered_external_email(quote):
     message = Mail(
-        to_emails=[To(quote.to_email)],
+        to_emails=[To(quote.bill_to_email)],
         from_email='orders@4cl.com'
     )
 

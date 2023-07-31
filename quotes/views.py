@@ -74,6 +74,7 @@ def create_quote(request):
                     'length': str(item_form['length']),
                     'width': str(item_form['width']),
                     'height': str(item_form['height']),
+                    'value': str(item_form['value']),
                 }
                 items.append(item)
 
@@ -182,6 +183,7 @@ def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, design
             length=item['length'],
             width=item['width'],
             height=item['height'],
+            value=item['value'],
         )
         item_obj.save()
 

@@ -180,6 +180,7 @@ class Quote(models.Model):
                 'length': str(item.item.length),
                 'width': str(item.item.width),
                 'height': str(item.item.height),
+                'value': str(item.item.value)
             })
         return items
 

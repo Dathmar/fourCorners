@@ -262,5 +262,15 @@ class ItemForm(forms.Form):
             }
         )
     )
+    value = forms.DecimalField(
+        required=False,
+        max_digits=5,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control-sm w-100',
+                'placeholder': 'Value ($)',
+            }
+        )
+    )
 
 
