@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Create Quote{% endblock %}
+{% block start_styles %}
+{% endblock %}
+
+{% block content %}
+    {{ items }}
+{% endblock %}
+
+{% block end_body %}
+    <script src="{% static 'js/new_quotes.js' %}"></script>
+{% endblock %}

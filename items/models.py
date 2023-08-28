@@ -9,7 +9,7 @@ class Item(models.Model):
     length = models.DecimalField(max_digits=5, decimal_places=2)
     width = models.DecimalField(max_digits=5, decimal_places=2)
     height = models.DecimalField(max_digits=5, decimal_places=2)
-    value = models.DecimalField(max_digits=5, decimal_places=2, default=None, null=True)
+    value = models.DecimalField(max_digits=15, decimal_places=2, default=None, null=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)

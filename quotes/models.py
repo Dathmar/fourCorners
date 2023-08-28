@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
 from django.conf import settings
+import time
 
 import quotes.quote_emails as quote_emails
 
@@ -83,23 +84,18 @@ class Quote(models.Model):
         if self.status == 'send_created_notification':
             self.status = 'created'
             quote_emails.send_create_external_email(self)
-            quote_emails.send_internal_email(self)
         elif self.status == 'send_options_notification':
             self.status = 'options_notification_sent'
             quote_emails.send_quote_options_external_email(self)
-            quote_emails.send_internal_email(self)
         elif self.status in ('paid', 'resend_payment_notification'):
             self.status = 'paid'
             quote_emails.send_quote_paid_external_email(self)
-            quote_emails.send_internal_email(self)
         elif self.status == 'send_bol_notification':
             self.status = 'bol_notification_sent'
             quote_emails.send_quote_label_external_email(self)
-            quote_emails.send_internal_email(self)
         elif self.status == 'send_delivery_notification':
             self.status = 'delivered'
             quote_emails.send_delivered_external_email(self)
-            quote_emails.send_internal_email(self)
 
         super().save(*args, **kwargs)
 
@@ -172,7 +168,8 @@ class Quote(models.Model):
 
     def get_items_in_quote(self):
         items = []
-        for item in QuoteItem.objects.filter(quote=self.id):
+        logger.info(f'get items list - {QuoteItem.objects.filter(quote=self)}')
+        for item in QuoteItem.objects.filter(quote=self):
             items.append({
                 'quantity': str(item.item.quantity),
                 'description': item.item.description,
@@ -180,8 +177,10 @@ class Quote(models.Model):
                 'length': str(item.item.length),
                 'width': str(item.item.width),
                 'height': str(item.item.height),
-                'value': str(item.item.value)
+                'value': str(item.item.value),
             })
+
+        logger.info(f'get items items - {items}')
         return items
 
     def get_quote_options_url(self):

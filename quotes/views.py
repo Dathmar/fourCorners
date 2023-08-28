@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.forms.formsets import formset_factory
 from django.template.loader import render_to_string
+import quotes.quote_emails as quote_emails
 
 from .forms import ItemForm, ToAddressForm, FromAddressForm, ContactForm, OptionsForm
 from items.models import Item
@@ -99,6 +100,7 @@ def create_quote(request):
                 from_info, to_info, bill_to_info, items, designer_info, options_info
             )
 
+            quote_emails.send_internal_email(quote_obj)
             return redirect('quotes:created-quote')
         else:
             context = {

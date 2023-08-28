@@ -264,7 +264,7 @@ class ItemForm(forms.Form):
     )
     value = forms.DecimalField(
         required=False,
-        max_digits=5,
+        max_digits=15,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control-sm w-100',
