@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Quote{% endblock %}
+{% block extra_header %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container p-4">
+        <div class="row text-center">
+            <div>
+                Your Logo Here
+            </div>
+
+        </div>
+        <div class="row">
+            {% include 'preforma-quotes/form/from-address-form.html' %}
+        </div>
+        <div class="row">
+            {% include 'preforma-quotes/form/to-address-form.html' %}
+        </div>
+        <div class="row pt-4">
+            <h1>Select items for shipping quote</h1>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <select class="select2 w-100" name="items[]" multiple="multiple">
+                    {% for option in options %}
+                        <option value="{{ option.value }}">{{ option.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row text-center pt-4">
+            <div>
+                <input type="submit" class="btn spruce-button" id="submit-quote" value="Submit">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block end_body %}
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+// In your Javascript (external .js resource or <script> tag)
+$(document).ready(function() {
+    $('.select2').select2();
+});
+</script>
+{% endblock %}

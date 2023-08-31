@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'quotes.apps.QuotesConfig',
     'account.apps.AccountConfig',
+    'preforma_quotes.apps.PreformaQuotesConfig',
 ]
 
 MIDDLEWARE = [

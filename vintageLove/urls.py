@@ -23,7 +23,6 @@ from django.views.generic.base import RedirectView
 admin.site.index_template = 'admin/custom_index.html'
 admin.autodiscover()
 
-
 urlpatterns = [
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
     path('apple-touch-icon.png', RedirectView.as_view(url=staticfiles_storage.url('img/apple-touch-icon.png'))),
@@ -37,6 +36,8 @@ urlpatterns = [
     path('quotes/', include('quotes.urls', namespace='quotes')),
     path('api/', include('api.urls', namespace='api')),
     path('account/', include('account.urls', namespace='account')),
+    path('auctions/', include('preforma_quotes.urls', namespace='preforma-quotes')),
 
     path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
