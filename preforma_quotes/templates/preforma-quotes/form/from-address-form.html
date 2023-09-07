@@ -1,33 +1,4 @@
 <h4>Pickup Location</h4>
-<div class="fieldWrapper pb-2">
-    {{ from_address.from_name }}
-    {{ from_address.from_name.errors }}
-</div>
-<div class="fieldWrapper pb-2">
-    {{ from_address.from_street }}
-    {{ from_address.from_street.errors }}
-</div>
-<div class="fieldWrapper pb-2">
-    {{ from_address.from_city }}
-    {{ from_address.from_city.errors }}
-</div>
-<div class="fieldWrapper pb-2">
-    {{ from_address.from_state }}
-    {{ from_address.from_state.errors }}
-</div>
-<div class="fieldWrapper pb-2">
-    {{ from_address.from_zip }}
-    {{ from_address.from_zip.errors }}
-</div>
-<div class="fieldWrapper pb-2">
-    {{ from_address.from_phone }}
-    {{ from_address.from_phone.errors }}
-</div>
-<div class="fieldWrapper pb-2">
-    {{ from_address.from_email }}
-    {{ from_address.from_email.errors }}
-</div>
-<div class="fieldWrapper pb-2">
-    {{ from_address.ref_number }}
-    {{ from_address.ref_number.errors }}
-</div>
+<p>
+    {{ address|safe }}
+</p>
