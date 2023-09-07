@@ -4,5 +4,5 @@ from . import views
 
 app_name = 'preforma_quotes'
 urlpatterns = [
-    path('auction/new-orleans', views.quote, name='quote'),
+    path('auction/<slug:auction_slug>/', views.quote, name='quote'),
 ]
