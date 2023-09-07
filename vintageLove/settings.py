@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
     'debug_toolbar',
     'phonenumber_field',
+    'django_select2',
 
     'base.apps.BaseConfig',
     'store.apps.StoreConfig',
