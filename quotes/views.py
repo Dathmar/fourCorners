@@ -4,10 +4,9 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.forms.formsets import formset_factory
 from django.template.loader import render_to_string
-import quotes.quote_emails as quote_emails
 
 from .forms import ItemForm, ToAddressForm, FromAddressForm, ContactForm, OptionsForm
-from items.models import Item
+from .helpers import generate_quote_objects_in_db
 
 from .models import Quote, QuoteItem, QuoteOptions, QuoteBol
 
@@ -66,7 +65,6 @@ def create_quote(request):
             }
 
             items = []
-
             for item_form in item_forms_clean:
                 item = {
                     'quantity': item_form['quantity'],
@@ -100,7 +98,6 @@ def create_quote(request):
                 from_info, to_info, bill_to_info, items, designer_info, options_info
             )
 
-            quote_emails.send_internal_email(quote_obj)
             return redirect('quotes:created-quote')
         else:
             context = {
@@ -141,61 +138,6 @@ def labels(request, encoding):
     bols = QuoteBol.objects.filter(quote=quote)
 
     return render(request, 'quotes/quote-labels.html', {'quote': quote, 'bols': bols})
-
-
-def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, designer_info, options_info):
-    quote_object = Quote(
-        to_name=to_info['name'],
-        to_email=to_info['email'],
-        to_phone=to_info['phone'],
-        to_street=to_info['street'],
-        to_city=to_info['city'],
-        to_state=to_info['state'],
-        to_zip=to_info['zip'],
-
-        from_name=from_info['name'],
-        from_phone=from_info['phone'],
-        from_street=from_info['street'],
-        from_city=from_info['city'],
-        from_state=from_info['state'],
-        from_zip=from_info['zip'],
-
-        reference_number=from_info['ref_number'],
-
-        bill_to_name=bill_to_info['name'],
-        bill_to_email=bill_to_info['email'],
-        bill_to_phone=bill_to_info['phone'],
-
-        designer_name=designer_info['name'],
-        designer_email=designer_info['email'],
-        designer_phone=designer_info['phone'],
-
-        delivery_type=options_info['delivery_type'],
-        delivery_notes=options_info['delivery_notes'],
-
-        status='send_created_notification',
-    )
-    quote_object.save()
-
-    for item in items:
-        item_obj = Item(
-            quantity=item['quantity'],
-            description=item['description'],
-            weight=item['weight'],
-            length=item['length'],
-            width=item['width'],
-            height=item['height'],
-            value=item['value'],
-        )
-        item_obj.save()
-
-        quote_item_obj = QuoteItem(
-            quote=quote_object,
-            item=item_obj,
-        )
-        quote_item_obj.save()
-
-    return quote_object
 
 
 def option_select(request, encoding):
