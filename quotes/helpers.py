@@ -1,6 +1,7 @@
 from .models import Quote, QuoteItem
 from items.models import Item
-from quote_emails import send_internal_email
+from .quote_emails import send_internal_email
+
 
 def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, designer_info, options_info):
     quote_object = Quote(
