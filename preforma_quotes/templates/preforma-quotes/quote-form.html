@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="row text-center pt-4">
-            <div>
+            <div class="col-12 col-md-8 offset-md-2">
                 Congratulations on your new treasures! To receive an instant quote on delivering them safely to you, simply provide your information and select all the items you have purchased.
             </div>
         </div>
@@ -26,7 +26,11 @@
             {% csrf_token %}
             <div class="row pt-4">
                 <div class="col-12">
+                    {% if previous_options %}
+                        {{ options_form }}
+                    {% else %}
                     {{ options_form }}
+                    {% endif %}
                 </div>
             </div>
             <div class="row pt-4">
@@ -46,4 +50,11 @@
 
 {% block end_body %}
 {{ options_form.media.js }}
+    <script>
+    document.onload =  $('.django-select2').djangoSelect2({
+            closeOnSelect: false,
+            placeholder: "Type in your lot number(s)"
+        });
+    </script>
+
 {% endblock %}

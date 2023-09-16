@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from django.http import Http404
-from django.conf import settings
+from django.shortcuts import render, get_object_or_404, reverse, redirect
+from django.http import Http404, HttpResponseRedirect
 
 from .forms import ToAddressForm, OptionsForm
+from .models import Auction, AuctionItem
+from quotes.helpers import generate_quote_objects_in_db
 
 import logging
 
@@ -10,105 +11,180 @@ logger = logging.getLogger('other_file')
 
 
 # Create your views here.
-def quote(request, auction_slug):
-    slug_list = [
-        'new-orleans',
-        'vogt',
-        'hindman',
-        'austin-auction',
-        'neal-auction',
-        'crescent-city',
-        'bright-star',
-        'ms-rau',
-        'hill-country-interiors',
-    ]
-
-    if auction_slug not in slug_list:
-        raise Http404("Auction not found")
-
-    logo_address = {
-        'new-orleans': {
-            'logo': '/media/logos/New Orleans Auction Gallery.png',
-            'address': 'New Orleans Auction Gallery<br>333 St Joseph St<br>New Orleans, LA 70130<br>(504) 566-1849<br>'
-        },
-        'vogt': {
-            'logo': '/media/logos/Vogt Auction Gallery.png',
-            'address': 'Vogt Auction<br>7233 Blanco Rd<br>San Antonio, TX 78216<br>(210) 822-6155<br>'
-        },
-        'hindman': {
-            'logo': '/media/logos/Hindman Auctions.png',
-            'address': 'Hindman<br>1550 W Carroll Ave<br>Chicago, IL 60607<br>(312) 280-1212'
-        },
-        'austin-auction': {
-            'logo': '/media/logos/Austin Auction Gallery.png',
-            'address': 'Austin Auction Gallery<br>8414 Anderson Mill Rd<br>Austin, TX 78729<br>(512) 258-5479'
-        },
-        'neal-auction': {
-            'logo': '/media/logos/Neal Auction.png',
-            'address': 'Neal Auction<br>4038 Magazine St<br>New Orleans, LA 70115<br>(504) 899-5329'
-        },
-        'crescent-city': {
-            'logo': '/media/logos/Crescent City.png',
-            'address': 'Crescent City Auction<br>1330 St Charles Ave<br>New Orleans, LA 70130<br>(504) 529-5057'
-        },
-        'bright-star': {
-            'logo': '/media/logos/Bright Star Antiques Auction.png',
-            'address': 'Bright Star Antiques Auction<br>1205 Main St<br>Sulphur Springs, TX 75482<br>(903) 885-4584'
-        },
-        'ms-rau': {
-            'logo': '/media/logos/MS Rau.png',
-            'address': 'M.S. Rau<br>622 Royal St<br>New Orleans, LA 70130<br>(888) 711-8084'
-        },
-        'hill-country-interiors': {
-            'logo': '/media/logos/Hill Country Interiors.png',
-            'address': 'Hill Country Interiors<br>1410 N Loop 1604 W<br>San Antonio, TX 78248<br>(210) 495-5768'
-        },
-
-
-    }
+def select_items(request, auction_slug):
+    auction = get_object_or_404(Auction, slug=auction_slug)
+    auction_address = (f'{auction.auction_house.name}<br>{auction.auction_house.address}'
+                       f'<br>{auction.auction_house.city}, {auction.auction_house.state} '
+                       f'{auction.auction_house.zip_code}<br>{auction.auction_house.phone_number}')
 
     if request.method == 'POST':
         to_address = ToAddressForm(request.POST)
         options_form = OptionsForm(request.POST)
+        options_form.fields['options'].queryset = AuctionItem.objects.filter(auction=auction)
+
+        logger.info(request.POST)
 
         if to_address.is_valid() and options_form.is_valid():
-            option_choices = [
-                (1, 'Lot 105 | Robert Gordy, (American/Louisiana, 1933-1986), "By The Sea", 1977, Acrylic On Canvas'),
-                (2, 'Lot 106 | Robert Gordy, (American/Louisiana, 1933-1986), "Nude In The Woods", Marker On Paper'),
-                (3, 'Lot 107 | Robert Gordy, (American/Louisiana, 1933-1986), "Folly", 1980, Screen Print'),
-                (4, 'Lot 108 | Jere Hardy Allen, (American/Mississippi, B. 1944), "Muses", Oil On Linen'),
-                (5, 'Lot 109 | Will Hinds, (American/Louisiana, 1936-2014), "Nobody\'s Home", Tempera On Board'),
-                (6, 'Lot 110 | Chris Roberts-Antieau, (American, B. 1951), "Horseback Rider", Embroidered Cloth'),
-                (7,
-                 'Lot 111 | Charles Schorre, (American/Texas, 1925-1996), "Untitled: Abstraction", 1971, Acrylic On Paper'),
-                (8, 'Lot 112 | James Michalopoulos, (American/Louisiana, B. 1951), "Just Riley\'s", Oil On Canvas'),
-                (9,
-                 'Lot 113 | George Rodrigue, (American/Louisiana, 1944-2013), "Blue Dog With Cypress Trees", 1994, Cameo Glass'),
-                (10, 'Lot 114 | George Rodrigue, (American/Louisiana, 1944-2013), "I Walk The Line", 2003, Silkscreen'),
-            ]
-            selected_options = options_form.cleaned_data
-            logger.info(f'selected_options: {selected_options}')
-            option_thing = []
-            for option_choice in option_choices:
-                if str(option_choice[0]) in selected_options['options']:
-                    option_thing.append(option_choice)
+            options = options_form.cleaned_data['options']
 
-            context = {
-                'option_thing': option_thing,
-                'address': logo_address[auction_slug]['address'],
-                'logo': logo_address[auction_slug]['logo'],
-                'square_js_url': settings.SQUARE_JS_URL
+            request.session[auction_slug] = {
+                'to_address': {
+                    'to_name': to_address.cleaned_data['to_name'],
+                    'to_street': to_address.cleaned_data['to_street'],
+                    'to_city': to_address.cleaned_data['to_city'],
+                    'to_state': to_address.cleaned_data['to_state'],
+                    'to_zip': to_address.cleaned_data['to_zip'],
+                    'to_phone': str(to_address.cleaned_data['to_phone']),
+                    'to_email': to_address.cleaned_data['to_email']
+                },
+                'options': options
             }
-            return render(request, 'preforma-quotes/quote-price.html', context)
 
+            # create normal quote as create status
+            auction_items = AuctionItem.objects.filter(id__in=options)
+
+            # get individual values
+            from_info = {
+                'name': auction.auction_house.name,
+                'street': auction.auction_house.address,
+                'city': auction.auction_house.city,
+                'state': auction.auction_house.state,
+                'zip': auction.auction_house.zip_code,
+                'email': auction.auction_house.email,
+                'phone': auction.auction_house.phone_number,
+                'ref_number': ""
+            }
+
+            to_info = {
+                'name': to_address.cleaned_data['to_name'],
+                'street': to_address.cleaned_data['to_street'],
+                'city': to_address.cleaned_data['to_city'],
+                'state': to_address.cleaned_data['to_state'],
+                'zip': to_address.cleaned_data['to_zip'],
+                'phone': str(to_address.cleaned_data['to_phone']),
+                'email': to_address.cleaned_data['to_email']
+            }
+
+            items = []
+            for item_form in auction_items:
+                item = {
+                    'quantity': 1,
+                    'description': item_form.description,
+                    'weight': 0,
+                    'length': 0,
+                    'width': 0,
+                    'height': 0,
+                    'value': 0,
+                }
+                items.append(item)
+
+            bill_to_info = {
+                'name': to_address.cleaned_data['to_name'],
+                'phone': str(to_address.cleaned_data['to_phone']),
+                'email': to_address.cleaned_data['to_email'],
+            }
+
+            designer_info = {
+                'name': None,
+                'phone': None,
+                'email': None,
+            }
+
+            options_info = {
+                'delivery_type': 'Front Door',
+                'delivery_notes': None,
+            }
+
+            quote_obj = generate_quote_objects_in_db(
+                from_info, to_info, bill_to_info, items, designer_info, options_info
+            )
+
+            return redirect('preforma-quotes:quote', auction_slug=auction_slug)
     else:
+        previous_options = None
+        previous_to_address = None
+
         to_address = ToAddressForm()
         options_form = OptionsForm()
+        options_form.fields['options'].queryset = AuctionItem.objects.filter(auction=auction)
+
+        # get existing quote in the session if it exists
+        if request.session.get(auction_slug, None):
+            previous_options = request.session[auction_slug].get('options', None)
+            previous_to_address = request.session[auction_slug].get('to_address', None)
+
+        if previous_options:
+            options_form.fields['options'].initial = previous_options
+
+        if previous_to_address:
+            to_address.fields['to_name'].initial = previous_to_address.get('to_name', None)
+            to_address.fields['to_street'].initial = previous_to_address.get('to_street', None)
+            to_address.fields['to_city'].initial = previous_to_address.get('to_city', None)
+            to_address.fields['to_state'].initial = previous_to_address.get('to_state', None)
+            to_address.fields['to_zip'].initial = previous_to_address.get('to_zip', None)
+            to_address.fields['to_phone'].initial = previous_to_address.get('to_phone', None)
+            to_address.fields['to_email'].initial = previous_to_address.get('to_email', None)
 
     context = {
         'options_form': options_form,
         'to_address': to_address,
-        'address': logo_address[auction_slug]['address'],
-        'logo': logo_address[auction_slug]['logo'],
+        'address': auction_address,
+        'logo': f'/media/{auction.auction_house.logo}',
     }
     return render(request, 'preforma-quotes/quote-form.html', context)
+
+
+def quote(request, auction_slug):
+    auction = get_object_or_404(Auction, slug=auction_slug)
+    auction_address = (f'{auction.auction_house.name}<br>{auction.auction_house.address}'
+                       f'<br>{auction.auction_house.city}, {auction.auction_house.state} '
+                       f'{auction.auction_house.zip_code}<br>{auction.auction_house.phone_number}')
+
+    if request.session.get(auction_slug, None):
+        previous_options = request.session[auction_slug].get('options', None)
+        previous_to_address = request.session[auction_slug].get('to_address', None)
+    else:
+        raise Http404('Quote information not found')
+
+    if request.session.get(auction_slug, None):
+        previous_options = request.session[auction_slug].get('options', None)
+        previous_to_address = request.session[auction_slug].get('to_address', None)
+
+    if previous_options:
+        previous_options = AuctionItem.objects.filter(pk__in=previous_options)
+    else:
+        raise Http404('Item information not found')
+
+    if previous_to_address:
+        address = f'{previous_to_address.get("to_name")}<br>'
+        address += f'{previous_to_address.get("to_street")}<br>'
+        address += f'{previous_to_address.get("to_city")},'
+        address += f'{previous_to_address.get("to_state")}'
+        address += f'{previous_to_address.get("to_zip")}<br>'
+        address += f'{previous_to_address.get("to_phone")}<br>'
+        address += f'{previous_to_address.get("to_email")}'
+    else:
+        raise Http404('Delivery information not found')
+
+    context = {
+        'address': address,
+        'logo': f'/media/{auction.auction_house.logo}',
+        'options': previous_options,
+        'auction_address': auction_address,
+    }
+    request.session[auction_slug] = None
+    return render(request, 'preforma-quotes/quote-price.html', context)
+
+
+def clear(request, auction_slug):
+    if request.session.get(auction_slug, None):
+        del request.session[auction_slug]
+    return HttpResponseRedirect(reverse('preforma-quotes:quote-form', args=[auction_slug]))
+
+
+def blah(request):
+    auction_items = AuctionItem.objects.all()
+
+    for auction_item in auction_items:
+        auction_item.search_name = ''
+        auction_item.save()

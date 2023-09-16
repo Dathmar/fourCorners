@@ -3,8 +3,6 @@
 
 {% block page_title %}Quote{% endblock %}
 {% block extra_header %}
-    {{ options_form.media.css }}
-    <script type="text/javascript" src="{{ square_js_url }}"></script>
     <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 {% endblock %}
 
@@ -17,55 +15,30 @@
         </div>
         <div class="row text-center p-4">
             <div>
-                We have your quote ready!  For your items.
+                Thank you for submitting your quote.  We will be in touch with you shortly with your à la carte options.<br>
+                If you have any questions in the meantime feel free to call us at (855) 581-1554.
             </div>
         </div>
-        {% for option in option_thing %}
+        <div class="row">
+            <h4>Items Shipping</h4>
+        </div>
+        {% for option in options %}
             <div class="row ">
                 <div class="col-12">
-                    {{ option.1 }}
+                    {{ option }}
                 </div>
             </div>
         {% endfor %}
-        <div class="row pt-4">
-            <div class="col-12">
-                Your quote is for $300.00
+        <div class="row">
+            <div class="col-12 col-md-6 pt-4">
+                <h4>Shipping From</h4>
+                {{ auction_address|safe }}
+            </div>
+            <div class="col-12 col-md-6 pt-4">
+                <h4>Shipping To</h4>
+                {{ address|safe }}
             </div>
         </div>
-        <form method="post">
-            {% csrf_token %}
-            <div class="row pt-3" id="card-container">
-            <div class="col">
-                <div class="row">
-                    <div id="form-container">
-                        <div id="sq-card"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% if payment_errors %}
-            {% for error in payment_errors %}
-        <div class="row pt-3">
-            <div class="col">
-                {{ error }}
-            </div>
-        </div>
-            {% endfor %}
-        {% endif %}
-            <div class="row text-center pt-4">
-                <div>
-                    <input type="submit" class="btn spruce-button" id="submit-quote" value="Accept">
-                </div>
-            </div>
-        </form>
-    </div>
-{% endblock %}
 
-{% block end_body %}
-    <script src="{% static 'js/session_cookie.js' %}"></script>
-    <script src="{% static 'js/paymentForm_v1.1.0.0.js' %}"></script>
-    <script>
-        const quote_id = "123456789";
-    </script>
-{{ options_form.media.js }}
+    </div>
 {% endblock %}
