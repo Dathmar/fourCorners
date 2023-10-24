@@ -37,8 +37,8 @@ urlpatterns = [
     path('api/', include('api.urls', namespace='api')),
     path('account/', include('account.urls', namespace='account')),
     path('auctions/', include('preforma_quotes.urls', namespace='preforma-quotes')),
+    path('partners/', include('preforma_quotes.urls', namespace='preforma-quotes')),
 
     path('select2/', include('django_select2.urls')),
-    path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -11,18 +11,17 @@ logger = logging.getLogger('other_file')
 
 
 # Create your views here.
-def select_items(request, auction_slug):
+def select_items(request, partner_type, auction_slug):
     auction = get_object_or_404(Auction, slug=auction_slug)
     auction_address = (f'{auction.auction_house.name}<br>{auction.auction_house.address}'
                        f'<br>{auction.auction_house.city}, {auction.auction_house.state} '
                        f'{auction.auction_house.zip_code}<br>{auction.auction_house.phone_number}')
-
+    all_items = AuctionItem.objects.filter(auction=auction).values_list('id', 'search_name')
     if request.method == 'POST':
         to_address = ToAddressForm(request.POST)
         options_form = OptionsForm(request.POST)
-        options_form.fields['options'].queryset = AuctionItem.objects.filter(auction=auction)
-
-        logger.info(request.POST)
+        options_form.fields['options'].choices = all_items
+        options_form.fields['options'].widget.choices = all_items
 
         if to_address.is_valid() and options_form.is_valid():
             options = options_form.cleaned_data['options']
@@ -69,12 +68,13 @@ def select_items(request, auction_slug):
             for item_form in auction_items:
                 item = {
                     'quantity': 1,
-                    'description': item_form.description,
+                    'description': f'{item_form.lot} | {item_form.description} | {item_form.description}',
                     'weight': 0,
-                    'length': 0,
-                    'width': 0,
-                    'height': 0,
+                    'length': item_form.length,
+                    'width': item_form.width,
+                    'height': item_form.height,
                     'value': 0,
+                    'box': item_form.box_id
                 }
                 items.append(item)
 
@@ -99,14 +99,15 @@ def select_items(request, auction_slug):
                 from_info, to_info, bill_to_info, items, designer_info, options_info
             )
 
-            return redirect('preforma-quotes:quote', auction_slug=auction_slug)
+            return redirect('preforma-quotes:quote', partner_type=partner_type, auction_slug=auction_slug)
     else:
         previous_options = None
         previous_to_address = None
 
         to_address = ToAddressForm()
         options_form = OptionsForm()
-        options_form.fields['options'].queryset = AuctionItem.objects.filter(auction=auction)
+        options_form.fields['options'].choices = all_items
+        options_form.fields['options'].widget.choices = all_items
 
         # get existing quote in the session if it exists
         if request.session.get(auction_slug, None):
@@ -134,7 +135,7 @@ def select_items(request, auction_slug):
     return render(request, 'preforma-quotes/quote-form.html', context)
 
 
-def quote(request, auction_slug):
+def quote(request, partner_type, auction_slug):
     auction = get_object_or_404(Auction, slug=auction_slug)
     auction_address = (f'{auction.auction_house.name}<br>{auction.auction_house.address}'
                        f'<br>{auction.auction_house.city}, {auction.auction_house.state} '
@@ -176,10 +177,10 @@ def quote(request, auction_slug):
     return render(request, 'preforma-quotes/quote-price.html', context)
 
 
-def clear(request, auction_slug):
+def clear(request, partner_type, auction_slug):
     if request.session.get(auction_slug, None):
         del request.session[auction_slug]
-    return HttpResponseRedirect(reverse('preforma-quotes:quote-form', args=[auction_slug]))
+    return HttpResponseRedirect(reverse('preforma-quotes:quote-form', args=[partner_type, auction_slug]))
 
 
 def blah(request):
@@ -188,3 +189,9 @@ def blah(request):
     for auction_item in auction_items:
         auction_item.search_name = ''
         auction_item.save()
+
+
+def delete_auction(request, partner_type, auction_slug):
+    auction = get_object_or_404(Auction, slug=auction_slug)
+    auction.delete()
+    return redirect(reverse('preforma-quotes:select_items', args=[partner_type, auction_slug]))

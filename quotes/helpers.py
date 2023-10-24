@@ -1,5 +1,6 @@
+from django.apps import apps
+
 from .models import Quote, QuoteItem
-from items.models import Item
 from .quote_emails import send_internal_email
 
 
@@ -38,7 +39,8 @@ def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, design
     quote_object.save()
 
     for item in items:
-        item_obj = Item(
+        item_model = apps.get_model('items', 'Item')
+        item_obj = item_model.objects.create(
             quantity=item['quantity'],
             description=item['description'],
             weight=item['weight'],
@@ -47,6 +49,16 @@ def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, design
             height=item['height'],
             value=item['value'],
         )
+        try:
+            box_model = apps.get_model('preforma_quotes', 'Box')
+            box = box_model.objects.filter(id=int(item['box']))
+            if box:
+                item_obj.box = box.first()
+            else:
+                item_obj.box = None
+        except KeyError:
+            item_obj.box = None
+
         item_obj.save()
 
         quote_item_obj = QuoteItem(

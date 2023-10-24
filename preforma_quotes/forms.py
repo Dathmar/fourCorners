@@ -58,9 +58,8 @@ class ToAddressForm(forms.Form):
     )
 
 
-class OptionsWidget(s2forms.ModelSelect2MultipleWidget):
-    model = AuctionItem
-    css_class_name = 'w-100 django-select2 django-select2-heavy'
+class OptionsWidget(s2forms.Select2MultipleWidget):
+    css_class_name = 'w-100 django-select2'
     search_fields = [
         "search_name__icontains",
     ]
@@ -68,7 +67,6 @@ class OptionsWidget(s2forms.ModelSelect2MultipleWidget):
 
 class OptionsForm(forms.Form):
     options = forms.MultipleChoiceField(
-        choices=AuctionItem.objects.all().values_list('id', 'search_name'),
         widget=OptionsWidget,
         label=False,
     )

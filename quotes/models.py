@@ -1,8 +1,6 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
 from django.conf import settings
-import time
 
 import quotes.quote_emails as quote_emails
 
@@ -170,15 +168,28 @@ class Quote(models.Model):
         items = []
         logger.info(f'get items list - {QuoteItem.objects.filter(quote=self)}')
         for item in QuoteItem.objects.filter(quote=self):
-            items.append({
-                'quantity': str(item.item.quantity),
-                'description': item.item.description,
-                'weight': str(item.item.weight),
-                'length': str(item.item.length),
-                'width': str(item.item.width),
-                'height': str(item.item.height),
-                'value': str(item.item.value),
-            })
+            if item.item.box:
+                items.append({
+                    'quantity': str(item.item.quantity),
+                    'description': item.item.description,
+                    'weight': str(item.item.weight),
+                    'length': str(item.item.length),
+                    'width': str(item.item.width),
+                    'height': str(item.item.height),
+                    'value': str(item.item.value),
+                    'box': item.item.box.description,
+                })
+            else:
+                items.append({
+                    'quantity': str(item.item.quantity),
+                    'description': item.item.description,
+                    'weight': str(item.item.weight),
+                    'length': str(item.item.length),
+                    'width': str(item.item.width),
+                    'height': str(item.item.height),
+                    'value': str(item.item.value),
+                    'box': 'No box size found.',
+                })
 
         logger.info(f'get items items - {items}')
         return items
