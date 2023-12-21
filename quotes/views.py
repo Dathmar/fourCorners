@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.forms.formsets import formset_factory
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 
 from .forms import ItemForm, ToAddressForm, FromAddressForm, ContactForm, OptionsForm
 from .helpers import generate_quote_objects_in_db
@@ -264,3 +265,14 @@ def items(request, encoding):
         'items': items,
     }
     return render(request, 'quotes/items.html', context)
+
+
+@login_required(login_url='/admin/login/')
+def packaging_view(request):
+    packaging_items = QuoteItem.objects.filter(quote__status='ready_to_package').order_by('-quote__date_modified')
+
+    context = {
+        'quote_items': packaging_items,
+    }
+    return render(request, 'quotes/packaging-quotes.html', context)
+

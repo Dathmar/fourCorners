@@ -24,6 +24,8 @@ class Quote(models.Model):
         ('needs_payment', 'Needs Payment'),
         ('resend_payment_notification', 'Resend Payment Notification'),
         ('paid', 'Paid'),
+        ('ready_to_package', 'Ready to Package'),
+        ('ready_for_bol', 'Ready for BOL'),
         ('send_bol_notification', 'Send BOL Notification'),
         ('bol_notification_sent', 'BOL Notification Sent'),
         ('shipped', 'Shipped'),
@@ -78,7 +80,6 @@ class Quote(models.Model):
     def save(self, *args, **kwargs):
         if not self.encoding:
             self.encoding = self.generate_unique_encoding()
-
         if self.status == 'send_created_notification':
             self.status = 'created'
             quote_emails.send_create_external_email(self)
@@ -86,7 +87,7 @@ class Quote(models.Model):
             self.status = 'options_notification_sent'
             quote_emails.send_quote_options_external_email(self)
         elif self.status in ('paid', 'resend_payment_notification'):
-            self.status = 'paid'
+            self.status = 'ready_to_package'
             quote_emails.send_quote_paid_external_email(self)
         elif self.status == 'send_bol_notification':
             self.status = 'bol_notification_sent'
@@ -193,6 +194,22 @@ class Quote(models.Model):
 
         logger.info(f'get items items - {items}')
         return items
+
+    def ready_to_package(self):
+        return self.status == 'ready_to_package'
+
+    def move_to_packaged(self):
+        try:
+            self.status = 'ready_for_bol'
+            self.save()
+            return True
+        except Exception as e:
+            logger.error(f'Tried to package {self.id} but error on setting status')
+            logger.error(e)
+            return False
+
+    def number_of_items(self):
+        return QuoteItem.objects.filter(quote=self).count()
 
     def get_quote_options_url(self):
         return settings.BASE_URL + reverse('quotes:option-select', args=[self.encoding])

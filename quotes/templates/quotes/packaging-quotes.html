@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Ready to Package{% endblock %}
+{% block start_styles %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Quotes Ready to Package</h1>
+            </div>
+        </div>
+        <table class="table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Quote</th>
+                    <th scope="col">Items</th>
+                    <th scope="col">Box</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% csrf_token %}
+                {% for quote_item in quote_items %}
+                    <tr>
+                        {% ifchanged quote_item.quote %}
+                            <td rowspan="{{ quote_item.quote.number_of_items }}">{{ quote_item.quote.encoding }}</td>
+                        {% endifchanged %}
+                        <td>{{ quote_item.item.description }}</td>
+                        <td>{{ quote_item.item.box }}</td>
+                        <td>{{ quote_item.item.quantity }}</td>
+                        {% ifchanged quote_item.quote %}
+                            <td rowspan="{{ quote_item.quote.number_of_items }}"><button class="btn pine-button submit-package" value="{{ quote_item.quote.id }}">Packaged</button></td>
+                        {% endifchanged %}
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+{% endblock %}
+
+{% block end_body %}
+    <script src="{% static 'js/session_cookie.js' %}"></script>
+    <script src="{% static 'js/packagingUpdate_v1.0.0.0.js' %}"></script>
+{% endblock %}

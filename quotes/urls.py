@@ -11,4 +11,6 @@ urlpatterns = [
     path('quote/pay/<str:encoding>/', views.quote_pay, name='quote-pay'),
     path('quote/<str:encoding>/',  views.quote_workflow, name='quote-workflow'),
     path('quote/items/<str:encoding>', views.items, name='items'),
+    path('packaging/', views.packaging_view, name='packaging')
+
 ]

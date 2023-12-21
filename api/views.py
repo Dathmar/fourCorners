@@ -1,6 +1,8 @@
-from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
+from django.http import JsonResponse, HttpResponse, Http404, HttpResponseNotAllowed, HttpResponseServerError
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_POST
+from django.contrib.auth.decorators import login_required
+
 from quotes.models import Quote
 from django.conf import settings
 
@@ -40,3 +42,20 @@ def square_app_id(request):
         'square_location_id': settings.SQUARE_LOCATION_ID,
     }
     return JsonResponse(data, safe=False)
+
+
+@require_POST
+@login_required
+def move_quote_to_packaged(request, quote_id):
+    quote = Quote.objects.get(pk=quote_id)
+
+    if not quote:
+        return Http404
+
+    if not quote.ready_to_package():
+        return HttpResponseNotAllowed
+
+    if quote.move_to_packaged():
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseServerError
