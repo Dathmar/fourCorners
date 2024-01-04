@@ -130,9 +130,9 @@ class AuctionItem(models.Model):
             try:
                 self.volume = self.height * self.length * self.width
             except ValueError:
-                self.max_volume = 0
+                self.volume = 0
             except TypeError:
-                self.max_volume = 0
+                self.volume = 0
 
         if not self.box:
             self.box = self.get_packaging_for_item()
