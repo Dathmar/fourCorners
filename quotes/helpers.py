@@ -11,7 +11,7 @@ from .quote_emails import send_internal_email
 
 import logging
 
-logger = logging.getLogger('other_file')
+logger = logging.getLogger('bulk_import')
 
 
 def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, designer_info, options_info, payment_options=None, create_status='send_created_notification'):
