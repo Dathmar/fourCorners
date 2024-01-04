@@ -77,24 +77,43 @@ class Quote(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-date_modified']
+
     def save(self, *args, **kwargs):
         if not self.encoding:
             self.encoding = self.generate_unique_encoding()
+
         if self.status == 'send_created_notification':
             self.status = 'created'
-            quote_emails.send_create_external_email(self)
+            if self.bill_to_email == 'test@4cl.com' or settings.SQUARE_ENVIRONMENT == 'sandbox':
+                logger.info(f'Mock sending send_created_notification email for quote {self.encoding}')
+            else:
+                quote_emails.send_create_external_email(self)
         elif self.status == 'send_options_notification':
             self.status = 'options_notification_sent'
-            quote_emails.send_quote_options_external_email(self)
+            if self.bill_to_email == 'test@4cl.com' or settings.SQUARE_ENVIRONMENT == 'sandbox':
+                logger.info(f'Mock sending send_options_notification email for quote {self.encoding}')
+            else:
+                quote_emails.send_quote_options_external_email(self)
         elif self.status in ('paid', 'resend_payment_notification'):
             self.status = 'ready_to_package'
-            quote_emails.send_quote_paid_external_email(self)
+            if self.bill_to_email == 'test@4cl.com' or settings.SQUARE_ENVIRONMENT == 'sandbox':
+                logger.info(f'Mock sending paid email for quote {self.encoding}')
+            else:
+                quote_emails.send_quote_paid_external_email(self)
         elif self.status == 'send_bol_notification':
             self.status = 'bol_notification_sent'
-            quote_emails.send_quote_label_external_email(self)
+            if self.bill_to_email == 'test@4cl.com' or settings.SQUARE_ENVIRONMENT == 'sandbox':
+                logger.info(f'Mock sending send_bol_notification email for quote {self.encoding}')
+            else:
+                quote_emails.send_quote_label_external_email(self)
         elif self.status == 'send_delivery_notification':
             self.status = 'delivered'
-            quote_emails.send_delivered_external_email(self)
+            if self.bill_to_email == 'test@4cl.com' or settings.SQUARE_ENVIRONMENT == 'sandbox':
+                logger.info(f'Mock sending delivered email for quote {self.encoding}')
+            else:
+                quote_emails.send_delivered_external_email(self)
 
         super().save(*args, **kwargs)
 

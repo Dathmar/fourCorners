@@ -5,9 +5,10 @@ from django.conf import settings
 from django.forms.formsets import formset_factory
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
+from django.apps import apps
 
-from .forms import ItemForm, ToAddressForm, FromAddressForm, ContactForm, OptionsForm
-from .helpers import generate_quote_objects_in_db
+from .forms import ItemForm, ToAddressForm, FromAddressForm, ContactForm, OptionsForm, BulkUploadForm
+from .helpers import generate_quote_objects_in_db, bulk_import_quotes_at_options_select
 
 from .models import Quote, QuoteItem, QuoteOptions, QuoteBol
 
@@ -276,3 +277,29 @@ def packaging_view(request):
     }
     return render(request, 'quotes/packaging-quotes.html', context)
 
+
+@login_required(login_url='/admin/login/')
+def bulk_upload(request, auction):
+    auction_model = apps.get_model('preforma_quotes', 'Auction')
+    auction_obj = auction_model.objects.get(slug=auction)
+    auction_house = auction_obj.auction_house.id
+
+    if request.method == 'POST':
+        form = BulkUploadForm(request.POST, request.FILES)
+        logger.info(request.FILES)
+        if form.is_valid():
+            quotes = bulk_import_quotes_at_options_select(request.FILES['file'], auction_house)
+            for quote in quotes:
+                logger.info(f'quote: {quote.encoding}')
+            return redirect('quotes:bulk-upload-done')
+    else:
+        form = BulkUploadForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'quotes/bulk-upload.html', context)
+
+
+def bulk_upload_done(request):
+    return render(request, 'quotes/bulk-upload-done.html')

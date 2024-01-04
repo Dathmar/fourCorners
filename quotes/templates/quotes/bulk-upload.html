@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Bulk Upload Quote{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="pt-4 pb-4">
+        <div class="row">
+            <h1>Upload a file to upload lots of quotes</h1>
+        </div>
+        <div class="row pt-4">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn pine-button mt-2" value="Submit Bulk Upload">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

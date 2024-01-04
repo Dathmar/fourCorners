@@ -14,20 +14,23 @@ class QuoteBolInline(admin.TabularInline):
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
-    list_display = ('encoding', 'bill_to_name', 'bill_to_email', 'bill_to_phone', 'status', )
+    list_display = ('encoding', 'bill_to_name', 'bill_to_email', 'bill_to_phone', 'status', 'number_of_items', )
 
     inlines = [QuoteOptionsInline, QuoteBolInline]
 
 
 @admin.register(QuoteItem)
 class QuoteItemAdmin(admin.ModelAdmin):
-    list_display = ('get_quote_encoding', 'get_bill_to_name', 'item_id', 'get_item_description', 'label')
+    list_display = ('get_quote_encoding', 'get_bill_to_name', 'item_id', 'get_item_description', 'label', )
 
+    @staticmethod
     def get_bill_to_name(self, obj):
         return obj.quote.bill_to_name
 
+    @staticmethod
     def get_item_description(self, obj):
         return obj.item.description
 
+    @staticmethod
     def get_quote_encoding(self, obj):
         return obj.quote.encoding

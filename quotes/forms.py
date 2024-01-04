@@ -274,3 +274,5 @@ class ItemForm(forms.Form):
     )
 
 
+class BulkUploadForm(forms.Form):
+    file = forms.FileField(label='Quote Excel File')
