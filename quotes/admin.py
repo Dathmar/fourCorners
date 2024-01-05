@@ -23,14 +23,11 @@ class QuoteAdmin(admin.ModelAdmin):
 class QuoteItemAdmin(admin.ModelAdmin):
     list_display = ('get_quote_encoding', 'get_bill_to_name', 'item_id', 'get_item_description', 'label', )
 
-    @staticmethod
     def get_bill_to_name(self, obj):
         return obj.quote.bill_to_name
 
-    @staticmethod
     def get_item_description(self, obj):
         return obj.item.description
 
-    @staticmethod
     def get_quote_encoding(self, obj):
         return obj.quote.encoding
