@@ -12,6 +12,17 @@
         <div class="row pt-4">
             You have uploaded your quotes.  E-mails have been sent and such.
         </div>
+        <div class="row">
+            You created {{ quotes|length }} quotes
+        </div>
+        <div class="row">
+            encoding|bill to name|bill to phone|bill to email|number of items
+        </div>
+        {% for quote in quotes %}
+        <div class="row">
+            {{ quote.encoding }}|{{ quote.bill_to_name }}|{{ quote.bill_to_phone }}|{{ quote.bill_to_email }}|{{ quote.number_of_items }}
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

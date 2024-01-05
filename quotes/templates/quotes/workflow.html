@@ -9,21 +9,30 @@
     <div class="container">
         <div class="col-12 pt-4 pb-4">
             <div class="row">
-                Have some intro text
+                Thank you for choosing 4CL for your shipping needs.  From this page you can find the latest information on your quote.
             </div>
-            <div class="row">
-                Give some indication of the quote status and next steps if any.
-            </div>
-            <div class="row">
+            {% if not quote.paid %}
+            <div class="row pt-2">
                 <div>
-                    Delivery Options <a href="{% url 'quotes:option-select' quote.encoding %}">View</a>
+                    Select or update your delivery options <a href="{% url 'quotes:option-select' quote.encoding %}">View</a>
                 </div>
             </div>
-            <div class="row">
+            {% endif %}
+            {% if not quote.paid and quote.get_selected_option %}
+            <div class="row pt-2">
                 <div>
-                    Payment <a href="{% url 'quotes:quote-pay' quote.encoding %}">View</a>
+                    Pay your quote <a href="{% url 'quotes:quote-pay' quote.encoding %}">View</a>
                 </div>
             </div>
+            {% endif %}
+            {% if quote.paid %}
+            <div class="row pt-2">
+                We have received your payment.
+            </div>
+            <div class="row pt-2">
+                Your items are in good hands we will be in contact with you as we package and ship to you.
+            </div>
+            {% endif %}
 
         </div>
     </div>

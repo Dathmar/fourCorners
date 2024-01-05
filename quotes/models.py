@@ -130,6 +130,12 @@ class Quote(models.Model):
             return selected_option.first().option_price
         return None
 
+    def get_selected_option(self):
+        selected_option = QuoteOptions.objects.filter(quote=self.id, selected_option=True)
+        if selected_option.exists():
+            return selected_option.first()
+        return None
+
     def get_square_charge(self):
         cost = self.get_cost()
         if cost:

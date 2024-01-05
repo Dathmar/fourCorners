@@ -18,6 +18,7 @@ import uuid
 import logging
 
 logger = logging.getLogger('other_file')
+bulk_logger = logging.getLogger('bulk_import')
 
 
 # Create your views here.
@@ -144,8 +145,11 @@ def labels(request, encoding):
 
 def option_select(request, encoding):
     quote = Quote.objects.get(encoding=encoding)
-    quote_options = QuoteOptions.objects.filter(quote__encoding=encoding)
 
+    if quote.paid:
+        return redirect('quotes:quote-workflow', quote.encoding)
+
+    quote_options = QuoteOptions.objects.filter(quote__encoding=encoding)
     if request.method == 'POST':
         try:
             logger.info(request.POST['choice'])
@@ -270,7 +274,7 @@ def items(request, encoding):
 
 @login_required(login_url='/admin/login/')
 def packaging_view(request):
-    packaging_items = QuoteItem.objects.filter(quote__status='ready_to_package').order_by('-quote__date_modified')
+    packaging_items = QuoteItem.objects.filter(quote__status='ready_to_package').order_by('quote__date_modified')
 
     context = {
         'quote_items': packaging_items,
@@ -289,9 +293,11 @@ def bulk_upload(request, auction):
         logger.info(request.FILES)
         if form.is_valid():
             quotes = bulk_import_quotes_at_options_select(request.FILES['file'], auction_house)
-            for quote in quotes:
-                logger.info(f'quote: {quote.encoding}')
-            return redirect('quotes:bulk-upload-done')
+            context = {
+                'quotes': quotes,
+            }
+            bulk_logger.info(f'bulk upload of {len(quotes)} quotes')
+            return render(request, 'quotes/bulk-upload-done.html', context)
     else:
         form = BulkUploadForm()
 
@@ -301,5 +307,10 @@ def bulk_upload(request, auction):
     return render(request, 'quotes/bulk-upload.html', context)
 
 
-def bulk_upload_done(request):
-    return render(request, 'quotes/bulk-upload-done.html')
+def bulk_upload_done(request, *args, **kwargs):
+    try:
+        quotes = kwargs['quotes']
+    except KeyError:
+        quotes = []
+
+    return render(request, 'quotes/bulk-upload-done.html', context={'quotes': quotes})

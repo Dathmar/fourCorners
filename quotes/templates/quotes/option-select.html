@@ -15,6 +15,17 @@
             Our expert logistics team has prepared the below quote options for you. Simply select the one that best suits your needs, and you can complete payment to automatically secure and schedule service.
         </div>
         <div class="row pt-4">
+            <div class="col-12 fw-bold">Item information</div>
+        </div>
+        {% for item in quote.get_items_in_quote %}
+            <div class="row pt-2">
+                <div class="col-12">
+                    {{ item.description }}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="row pt-4">
             <form method="post">
                 {% csrf_token %}
                 <fieldset>

@@ -13,6 +13,22 @@
     <div class="row">
         Simply complete your payment below to secure your service. Once payment is made, you will receive a receipt along with scheduling details and custom chipping labels.
     </div>
+    <div class="row pt-4">
+        <div class="col-12 fw-bold">Item information</div>
+    </div>
+    {% for item in quote.get_items_in_quote %}
+        <div class="row pt-2">
+            <div class="col-12">
+                {{ item.description }}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="pt-3">Selected Quote Option</h5>
+            <p>{{ quote.get_selected_option }}</p>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <h5 class="pt-3">Quote Price</h5>
