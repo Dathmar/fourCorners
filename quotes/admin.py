@@ -14,7 +14,7 @@ class QuoteBolInline(admin.TabularInline):
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
-    list_display = ('encoding', 'bill_to_name', 'bill_to_email', 'bill_to_phone', 'status', 'number_of_items', )
+    list_display = ('encoding', 'bill_to_name', 'bill_to_email', 'bill_to_phone', 'status', 'number_of_items', 'paid_date', 'order_paid')
 
     inlines = [QuoteOptionsInline, QuoteBolInline]
 

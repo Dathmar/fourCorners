@@ -152,21 +152,22 @@ def option_select(request, encoding):
     quote_options = QuoteOptions.objects.filter(quote__encoding=encoding)
     if request.method == 'POST':
         try:
-            logger.info(request.POST['choice'])
             selected_option = request.POST['choice']
 
             # loop through the options if it's selected on the form the set to selected.
             # if they are changing their option then set other options to false
             for quote_option in quote_options:
-                logger.info(f'{quote_option.id} - {selected_option}')
                 if int(quote_option.id) == int(selected_option):
-                    logger.info(f'setting option {quote_option} to true')
+                    logger.info(f'{quote.encoding} setting option {quote_option} to true')
                     quote_option.selected_option = True
                     quote_option.save()
                 elif quote_option.selected_option:
-                    logger.info(f'setting option {quote_option} to false')
+                    logger.info(f'{quote.encoding} setting option {quote_option} to false')
                     quote_option.selected_option = False
                     quote_option.save()
+
+            quote.status = 'needs_payment'
+            quote.save()
 
             return redirect('quotes:quote-pay', encoding=quote.encoding)
 
@@ -211,10 +212,11 @@ def quote_pay(request, encoding):
             'amount_money': {
                 'amount': payment_amount,
                 'currency': 'USD'
-            }
+            },
+            'order_id': quote.encoding,
         }
 
-        logger.info(f'submitting payment with this info {square_payment_body}')
+        logger.info(f'{quote.encoding} PayQuote submitting payment with this info {square_payment_body}')
 
         client = Client(
             access_token=settings.SQUARE_ACCESS_TOKEN,

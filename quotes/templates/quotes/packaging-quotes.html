@@ -16,6 +16,7 @@
             <thead>
                 <tr>
                     <th scope="col">Quote</th>
+                    <th scope="col">Customer Name</th>
                     <th scope="col">Items</th>
                     <th scope="col">Box</th>
                     <th scope="col">Quantity</th>
@@ -29,6 +30,7 @@
                         {% ifchanged quote_item.quote %}
                             <td rowspan="{{ quote_item.quote.number_of_items }}">{{ quote_item.quote.encoding }}</td>
                         {% endifchanged %}
+                        <td>{{ quote_item.quote.bill_to_name }}</td>
                         <td>{{ quote_item.item.description }}</td>
                         <td>{{ quote_item.item.box }}</td>
                         <td>{{ quote_item.item.quantity }}</td>

@@ -175,7 +175,7 @@ def bulk_import_quotes_at_options_select(xl_file_path, auction_house):
         'phone': None,
     }
     options_info = {
-        'delivery_type': '',
+        'delivery_type': 'NA',
         'delivery_notes': None,
     }
 

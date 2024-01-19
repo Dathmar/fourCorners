@@ -25,12 +25,14 @@ class Quote(models.Model):
         ('resend_payment_notification', 'Resend Payment Notification'),
         ('paid', 'Paid'),
         ('ready_to_package', 'Ready to Package'),
+        ('ready_to_ship', 'Ready to Ship'),
         ('ready_for_bol', 'Ready for BOL'),
         ('send_bol_notification', 'Send BOL Notification'),
         ('bol_notification_sent', 'BOL Notification Sent'),
         ('shipped', 'Shipped'),
         ('send_delivery_notification', 'Send Delivery Notification'),
         ('delivered', 'Delivered'),
+        ('customer_picked_up', 'Customer Picked Up'),
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -68,6 +70,8 @@ class Quote(models.Model):
     paid = models.BooleanField(default=False)
     paid_date = models.DateTimeField(blank=True, null=True)
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    order_paid = models.BooleanField(default=False)
 
     status = models.CharField(max_length=30, choices=QUOTE_STATUS_CHOICES, default='created')
 
@@ -225,7 +229,7 @@ class Quote(models.Model):
 
     def move_to_packaged(self):
         try:
-            self.status = 'ready_for_bol'
+            self.status = 'ready_to_ship'
             self.save()
             return True
         except Exception as e:
