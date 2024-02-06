@@ -32,7 +32,7 @@ class AuctionHouse(models.Model):
 class Auction(models.Model):
     auction_house = models.ForeignKey(AuctionHouse, on_delete=models.CASCADE, verbose_name='Partner')
     slug = models.SlugField(max_length=200)
-    file = models.FileField(upload_to='auctions')
+    file = models.FileField(upload_to='auctions', blank=True, null=True)
 
     __original_file = None
 
@@ -54,7 +54,7 @@ class Auction(models.Model):
 
         super().save(*args, **kwargs)
 
-        if process_excel:
+        if process_excel and self.file is not None:
             self.process_excel()
 
     def process_excel(self):

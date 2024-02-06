@@ -124,14 +124,21 @@ class Quote(models.Model):
         super().save(*args, **kwargs)
 
     def get_logo_url(self):
-        logo_url = f'{settings.BASE_URL}{self.seller.logo.url}'
+        if self.seller:
+            logo_url = f'{settings.BASE_URL}{self.seller.logo.url}'
+        else:
+            logo_url = None
         if not logo_url:
             logo_url = settings.DEFAULT_LOGO_URL
 
         return logo_url
 
     def get_email_closing(self):
-        email_closing = self.seller.email_closing
+        if self.seller:
+            email_closing = self.seller.email_closing
+        else:
+            email_closing = None
+
         if not email_closing:
             email_closing = "Logistics Team"
         return email_closing

@@ -77,7 +77,7 @@ def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, design
         delivery_type=options_info['delivery_type'],
         delivery_notes=options_info['delivery_notes'],
 
-        auction_house=auction_house,
+        seller=auction_house,
 
         status=create_status,
     )
