@@ -12,11 +12,19 @@ class QuoteBolInline(admin.TabularInline):
     extra = 1
 
 
+class QuoteItemInline(admin.TabularInline):
+    model = QuoteItem
+    extra = 1
+
+    fields = ('item__description', 'label',)
+
+
+
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
     list_display = ('encoding', 'bill_to_name', 'bill_to_email', 'bill_to_phone', 'status', 'number_of_items', 'paid_date', 'order_paid')
 
-    inlines = [QuoteOptionsInline, QuoteBolInline]
+    inlines = [QuoteOptionsInline, QuoteItemInline, QuoteBolInline]
 
 
 @admin.register(QuoteItem)
