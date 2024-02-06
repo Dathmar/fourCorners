@@ -78,6 +78,8 @@ class Quote(models.Model):
     pickup_window = models.CharField(max_length=1000, blank=True, null=True)
     delivery_window = models.CharField(max_length=1000, blank=True, null=True)
 
+    seller = models.ForeignKey('preforma_quotes.AuctionHouse', on_delete=models.CASCADE, blank=True, null=True, default=None)
+
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
@@ -120,6 +122,19 @@ class Quote(models.Model):
                 quote_emails.send_delivered_external_email(self)
 
         super().save(*args, **kwargs)
+
+    def get_logo_url(self):
+        logo_url = f'{settings.BASE_URL}{self.seller.logo.url}'
+        if not logo_url:
+            logo_url = settings.DEFAULT_LOGO_URL
+
+        return logo_url
+
+    def get_email_closing(self):
+        email_closing = self.seller.email_closing
+        if not email_closing:
+            email_closing = "Logistics Team"
+        return email_closing
 
     def generate_unique_encoding(self):
         while True:

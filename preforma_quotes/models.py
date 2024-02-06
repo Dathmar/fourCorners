@@ -19,6 +19,7 @@ class AuctionHouse(models.Model):
     phone_number = models.CharField(max_length=15)
     email = models.EmailField(blank=True, null=True)
     logo = models.ImageField(upload_to='logos')
+    email_closing = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Partner'

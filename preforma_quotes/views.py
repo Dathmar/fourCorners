@@ -96,7 +96,7 @@ def select_items(request, partner_type, auction_slug):
             }
 
             quote_obj = generate_quote_objects_in_db(
-                from_info, to_info, bill_to_info, items, designer_info, options_info
+                from_info, to_info, bill_to_info, items, designer_info, options_info, auction_house=auction.auction_house
             )
 
             return redirect('preforma-quotes:quote', partner_type=partner_type, auction_slug=auction_slug)

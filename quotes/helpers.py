@@ -14,7 +14,7 @@ import logging
 logger = logging.getLogger('bulk_import')
 
 
-def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, designer_info, options_info, payment_options=None, create_status='send_created_notification'):
+def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, designer_info, options_info, payment_options=None, create_status='send_created_notification', auction_house=None):
     to_email = 'test@4cl.com'
     to_phone = '+12105551212'
 
@@ -76,6 +76,8 @@ def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, design
 
         delivery_type=options_info['delivery_type'],
         delivery_notes=options_info['delivery_notes'],
+
+        auction_house=auction_house,
 
         status=create_status,
     )
@@ -239,7 +241,7 @@ def bulk_import_quotes_at_options_select(xl_file_path, auction_house):
         quote_obj = generate_quote_objects_in_db(
             quote['from_info'], quote['to_info'], quote['bill_to_info'], quote['items'],
             quote['designer_info'], quote['options_info'], payment_options=quote['options'],
-            create_status='send_options_notification'
+            create_status='send_options_notification', auction_house=auction_house
         )
         quote_list.append(quote_obj)
 

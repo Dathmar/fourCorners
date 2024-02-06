@@ -26,10 +26,12 @@ def send_internal_email(quote):
         'options_info': quote.get_options_info(),
         'status': quote.status,
         'encoding': quote.encoding,
+        'email_logo': quote.get_logo_url(),
+        'email_closing': quote.get_email_closing(),
     }
 
-    message.dynamic_template_data = data
-    send_email(message, data, 'Create Internal')
+
+    send_email(message=message, data=data, logger_note='Create Internal')
 
 
 def send_create_external_email(quote):
@@ -37,9 +39,13 @@ def send_create_external_email(quote):
         to_emails=[To(quote.bill_to_email)],
         from_email='orders@4cl.com'
     )
+    data = {
+        'email_logo': quote.get_logo_url(),
+        'email_closing': quote.get_email_closing(),
+    }
 
     message.template_id = 'd-6af4e6842d2544fe969ecadceadbade4'
-    send_email(message=message, logger_note='Create External')
+    send_email(message=message, data=data, logger_note='Create External')
 
 
 def send_quote_options_external_email(quote):
@@ -50,8 +56,10 @@ def send_quote_options_external_email(quote):
     options_url = quote.get_quote_options_url()
     data = {
         'options_url': options_url,
+        'email_logo': quote.get_logo_url(),
+        'email_closing': quote.get_email_closing(),
     }
-    message.dynamic_template_data = data
+
     message.template_id = 'd-69c6bf4ea1854f22a1a9a19568319feb'
     send_email(message=message, data=data, logger_note='Quote Options External')
 
@@ -67,8 +75,10 @@ def send_quote_paid_external_email(quote):
         'from_address': f'{quote.from_city}, {quote.from_zip}',
         'to_address': f'{quote.to_city}, {quote.to_zip}',
         'payment_amount': quote.paid_amount,
+        'email_logo': quote.get_logo_url(),
+        'email_closing': quote.get_email_closing(),
     }
-    message.dynamic_template_data = data
+
     message.template_id = 'd-9a829673fd184955a9db578fed36135c'
     send_email(message=message, data=data, logger_note='Quote Paid External')
 
@@ -84,8 +94,10 @@ def send_quote_label_external_email(quote):
         'label_url': quote.get_label_url(),
         'delivery_window': quote.delivery_window,
         'pickup_window': quote.pickup_window,
+        'email_logo': quote.get_logo_url(),
+        'email_closing': quote.get_email_closing(),
     }
-    message.dynamic_template_data = data
+
     message.template_id = 'd-7a2892575231434882d99cd51fb10715'
     send_email(message=message, data=data, logger_note='Quote Label External')
 
@@ -96,14 +108,21 @@ def send_delivered_external_email(quote):
         from_email='orders@4cl.com'
     )
 
+    data = {
+        'email_logo': quote.get_logo_url(),
+        'email_closing': quote.get_email_closing(),
+    }
+
     message.template_id = 'd-80cd15eb0c21466ba6a22a78161d3cb8'
-    send_email(message=message, logger_note='Quote Delivered External')
+    send_email(message=message, data=data, logger_note='Quote Delivered External')
 
 
 def send_email(message, data=None,  logger_note=''):
     sg = SendGridAPIClient(settings.SEND_GRID_API_KEY)
     logger.info(f'Sending {logger_note} email')
+
     if data:
+        message.dynamic_template_data = data
         logger.info(json.dumps(data))
 
     try:
