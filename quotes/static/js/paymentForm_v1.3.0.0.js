@@ -65,6 +65,7 @@ async function tokenize(paymentMethod) {
         return tokenResult.token;
     } else {
         let errorMessage = `Tokenization failed-status: ${tokenResult.status}`;
+        await log_error(errorMessage);
         if (tokenResult.errors) {
             errorMessage += ` and errors: ${JSON.stringify(
                 tokenResult.errors
@@ -86,6 +87,14 @@ async function nce(nonce) {
     await fetch('/api/v1/payment-nonce/', {
         method: 'POST',
         headers: {"X-Requested-With": "XMLHttpRequest", "X-CSRFToken": getCookie("csrftoken")},
-        body: JSON.stringify({'nonce': nonce})
+        body: JSON.stringify({'nonce': nonce, 'quote_encoding': quote_encoding})
+    }).catch(err => console.log(err))
+}
+
+async function log_error(error) {
+    await fetch('/api/v1/payment-error/', {
+        method: 'POST',
+        headers: {"X-Requested-With": "XMLHttpRequest", "X-CSRFToken": getCookie("csrftoken")},
+        body: JSON.stringify({'error': error, 'quote_encoding': quote_encoding})
     }).catch(err => console.log(err))
 }

@@ -18,10 +18,16 @@ payment_logger = logging.getLogger('payments')
 def payment_nonce(request):
     payment_logger.info('order_nonce Received nonce')
     nonce = json.loads(request.body)['nonce']
+    quote_encoding = json.loads(request.body)['quote_encoding']
     request.session['nonce'] = nonce
-    payment_logger.info(f'order_nonce set nonce to {nonce}')
+    payment_logger.info(f'{quote_encoding} - order_nonce set nonce to {nonce}')
     return HttpResponse('ok')
 
+@require_POST
+def payment_error(request):
+    error_msg = json.loads(request.body)['error']
+    quote_encoding = json.loads(request.body)['quote_encoding']
+    payment_logger.info(f'{quote_encoding} payment_error {error_msg}')
 
 @require_GET
 def quote_cost(request):

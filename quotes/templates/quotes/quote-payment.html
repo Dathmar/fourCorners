@@ -71,9 +71,9 @@
 </div>
 {% endblock %}
 {% block end_body %}
-    <script src="{% static 'js/session_cookie.js' %}"></script>
-    <script src="{% static 'js/paymentForm_v1.1.0.0.js' %}"></script>
     <script>
-        const quote_id = "{{ quote.id }}";
+        const quote_encoding = "{{ quote.encoding }}";
     </script>
+    <script src="{% static 'js/session_cookie.js' %}"></script>
+    <script src="{% static 'js/paymentForm_v1.3.0.0.js' %}"></script>
 {% endblock %}

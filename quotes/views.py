@@ -19,6 +19,8 @@ import logging
 
 logger = logging.getLogger('other_file')
 bulk_logger = logging.getLogger('bulk_import')
+payment_errors_logger = logging.getLogger('payment_errors')
+payment_logger = logging.getLogger('payments')
 
 
 # Create your views here.
@@ -188,23 +190,35 @@ def option_select(request, encoding):
 
 def quote_pay(request, encoding):
     quote = Quote.objects.get(encoding=encoding)
+
+    payment_logger.info(f'{quote.encoding} | {request.META}')
+
     context = {
         'quote': quote,
         'square_js_url': settings.SQUARE_JS_URL
     }
     if quote.paid:
+        payment_logger.info(f'{quote.encoding} | Already paid')
         return redirect('quotes:quote-workflow', quote.encoding)
 
     if request.method == 'POST':
+        payment_logger.info(f'{quote.encoding} |  POST')
         idempotency_key = request.session.get('idempotency_shipping_key')
         if not idempotency_key:
+            payment_logger.info(f'{quote.encoding} |  idempotency_key not found')
+            payment_logger.info(f'{quote.encoding} |  generating new idempotency_key')
             idempotency_key = str(uuid.uuid4())
             request.session['idempotency_shipping_key'] = idempotency_key
 
-        nonce = request.session.get('nonce')
+        payment_logger.info(f'{quote.encoding} |  idempotency_key: {idempotency_key}')
 
-        logger.info(f'{quote.encoding} PayQuote nonce: {nonce}')
-        logger.info(f'{quote.encoding} PayQuote idempotency_key: {idempotency_key}')
+        nonce = request.session.get('nonce')
+        if not nonce:
+            payment_errors_logger.info(f'{quote.encoding} PayQuote nonce not found')
+            payment_logger.info(f'{quote.encoding} PayQuote nonce not found')
+        else:
+            payment_logger.info(f'{quote.encoding} PayQuote nonce: {nonce}')
+
         payment_amount = quote.get_square_charge()
         square_payment_body = {
             'source_id': str(nonce),
@@ -213,10 +227,10 @@ def quote_pay(request, encoding):
                 'amount': payment_amount,
                 'currency': 'USD'
             },
-            'order_id': quote.encoding,
+            'reference_id': quote.encoding,
         }
 
-        logger.info(f'{quote.encoding} PayQuote submitting payment with this info {square_payment_body}')
+        payment_logger.info(f'{quote.encoding} PayQuote submitting payment with this info {square_payment_body}')
 
         client = Client(
             access_token=settings.SQUARE_ACCESS_TOKEN,
@@ -229,7 +243,7 @@ def quote_pay(request, encoding):
         request.session['idempotency_shipping_key'] = False
         request.session['nonce'] = False
 
-        logger.info(f'{quote.encoding} PayQuote payment_result: {str(payment_result)}')
+        payment_logger.info(f'{quote.encoding} PayQuote payment_result: {str(payment_result)}')
 
         if payment_result.is_success():
             quote.paid = True
@@ -237,8 +251,12 @@ def quote_pay(request, encoding):
             quote.paid_date = datetime.utcnow()
             quote.status = 'paid'
             quote.save()
+            payment_logger.info(f'{quote.encoding} | payment successful')
             return render(request, 'quotes/quote-payment-complete.html', {'quote': quote})
         else:
+            payment_errors_logger.info(f'{quote.encoding} PayQuote payment failed {payment_result.errors}')
+            payment_logger.info(f'{quote.encoding} PayQuote payment failed {payment_result.errors}')
+            payment_errors_logger.info(f'{payment_result}')
             context.update({'payment_errors': payment_result.errors})
 
     request.session['idempotency_shipping_key'] = str(uuid.uuid4())
