@@ -34,6 +34,35 @@ def send_internal_email(quote):
     send_email(message=message, data=data, logger_note='Create Internal')
 
 
+def send_tracking_external_email(quote):
+    message = Mail(
+        to_emails=[To(quote.bill_to_email)],
+        from_email='orders@4cl.com'
+    )
+    tracking_url = quote.shipper.tracking_url
+    tracking_number = quote.tracking_number
+
+    if tracking_url:
+        tracking_url = tracking_url.replace('{tracking}', tracking_number)
+        message.template_id = 'd-fe20070b24534305a938a402e1c7ebbf'  # with button template
+    else:
+        tracking_url = False
+        message.template_id = 'd-3ba42244cf0f4db687727c79b660fe47'  # with button template
+
+    if not tracking_number:
+        return None
+
+    data = {
+        'email_logo': quote.get_logo_url(),
+        'email_closing': quote.get_email_closing(),
+        'shipper': quote.shipper.name,
+        'tracking_url': tracking_url,
+        'tracking_number': quote.tracking_number,
+    }
+
+    send_email(message=message, data=data, logger_note='Tracking External')
+
+
 def send_create_external_email(quote):
     message = Mail(
         to_emails=[To(quote.bill_to_email)],

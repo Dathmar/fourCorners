@@ -14,7 +14,18 @@ from phonenumber_field.modelfields import PhoneNumberField
 logger = logging.getLogger('other_file')
 
 
-# Create your models here.
+class Shipper(models.Model):
+    name = models.CharField(max_length=1000)
+    tracking_url = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        help_text='Enter the URL that should be used for the tracking number use {tracking} where the tracking number should be inserted.')
+
+    def __str__(self):
+        return self.name
+
+
 class Quote(models.Model):
     QUOTE_STATUS_CHOICES = (
         ('send_created_notification', 'Send Created Notification'),
@@ -29,6 +40,8 @@ class Quote(models.Model):
         ('ready_for_bol', 'Ready for BOL'),
         ('send_bol_notification', 'Send BOL Notification'),
         ('bol_notification_sent', 'BOL Notification Sent'),
+        ('send_tracking_notification', 'Send Tracking Notification'),
+        ('tracking_notification_sent', 'Tracking Notification Sent'),
         ('shipped', 'Shipped'),
         ('send_delivery_notification', 'Send Delivery Notification'),
         ('delivered', 'Delivered'),
@@ -79,12 +92,17 @@ class Quote(models.Model):
     delivery_window = models.CharField(max_length=1000, blank=True, null=True)
 
     seller = models.ForeignKey('preforma_quotes.AuctionHouse', on_delete=models.CASCADE, blank=True, null=True, default=None)
-
+    shipper = models.ForeignKey(Shipper, on_delete=models.CASCADE, blank=True, null=True, default=None)
+    tracking_number = models.CharField(max_length=100, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-date_modified']
+
+    def delete(self, *args, **kwargs):
+        logger.info(f'Deleting | {self.id} | {self.encoding}')
+        super(Quote, self).delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         if not self.encoding:
@@ -114,6 +132,12 @@ class Quote(models.Model):
                 logger.info(f'Mock sending send_bol_notification email for quote {self.encoding}')
             else:
                 quote_emails.send_quote_label_external_email(self)
+        elif self.status == 'send_tracking_notification':
+            self.status = 'tracking_notification_sent'
+            if self.bill_to_email == 'test@4cl.com' or settings.SQUARE_ENVIRONMENT == 'sandbox':
+                logger.info(f'Mock sending send_tracking_notification email for quote {self.encoding}')
+            else:
+                quote_emails.send_tracking_external_email(self)
         elif self.status == 'send_delivery_notification':
             self.status = 'delivered'
             if self.bill_to_email == 'test@4cl.com' or settings.SQUARE_ENVIRONMENT == 'sandbox':

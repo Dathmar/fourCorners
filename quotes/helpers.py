@@ -82,6 +82,7 @@ def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, design
         status=create_status,
     )
     quote_object.save()
+    logger.info(f'Created quote {quote_object.id} | {quote_object.encoding} | {quote_object.bill_to_name} | {quote_object.bill_to_email}')
 
     for item in items:
         item_model = apps.get_model('items', 'Item')
