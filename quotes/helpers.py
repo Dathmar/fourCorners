@@ -95,7 +95,13 @@ def generate_quote_objects_in_db(from_info, to_info, bill_to_info, items, design
             height=item['height'],
             value=item['value'],
         )
-        if item['box']:
+
+        try:
+            box_check = item['box']
+        except KeyError:
+            box_check = None
+
+        if box_check:
             try:
                 box_model = apps.get_model('preforma_quotes', 'Box')
                 box = box_model.objects.filter(id=int(item['box']))
