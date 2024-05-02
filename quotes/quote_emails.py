@@ -30,7 +30,6 @@ def send_internal_email(quote):
         'email_closing': quote.get_email_closing(),
     }
 
-
     send_email(message=message, data=data, logger_note='Create Internal')
 
 
